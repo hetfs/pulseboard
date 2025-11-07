@@ -1,0 +1,38 @@
+# -------------------------------------------------------------------
+# 🧩 YAML Lint Configuration: PulseBoard
+# Enforces consistent YAML formatting for CI, configs, and Ansible.
+# Docs: https://yamllint.readthedocs.io/en/stable/configuration.html
+# -------------------------------------------------------------------
+
+extends: default
+
+rules:
+  # === Formatting Rules ===
+
+  # --- Line Length ---
+  line-length:
+    max: 120
+    level: warning # Warn for long lines (useful for documentation)
+
+  # --- Indentation ---
+  indentation:
+    spaces: 2
+    indent-sequences: consistent # Consistent indentation for sequences
+
+  # --- Document Start ---
+  document-start:
+    enable: false # Disabled for Docusaurus compatibility and YAML fragments
+
+  # --- Whitespace ---
+  trailing-spaces:
+    level: error # Strict enforcement for clean files
+
+  # --- File Structure ---
+  new-lines-at-end-of-file:
+    enable: true
+    level: warning
+
+  # --- Value Formatting ---
+  truthy:
+    check-keys: false # Allow "yes"/"no" in keys (YAML-safe)
+    allowed-values: ["true", "false"] # Explicit allowed boolean values

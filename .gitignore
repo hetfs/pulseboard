@@ -1,22 +1,104 @@
-# Dependencies
-/node_modules
+# ----------------------------------------
+# 🧩 Python Environment
+# ----------------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+.eggs/
+.env
+.venv/
+venv/
+ENV/
+env/
+pip-wheel-metadata/
+pip-log.txt
 
-# Production
-/build
+# ----------------------------------------
+# 🧰 Build & Packaging
+# ----------------------------------------
+build/
+dist/
+wheels/
+*.manifest
+*.spec
 
-# Generated files
-.docusaurus
-.cache-loader
+# ----------------------------------------
+# 🧪 Testing & Coverage
+# ----------------------------------------
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+.mypy_cache/
+.cache/
+coverage.xml
+nosetests.xml
+pytestdebug.log
 
-# Misc
+# ----------------------------------------
+# 🧱 Project Files
+# ----------------------------------------
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*.bak
+*.tmp
+*.log
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# ----------------------------------------
+# ⚙️ Tooling & Lint
+# ----------------------------------------
+ruff_cache/
+.editorconfig-checker/
+.flowmark/
+.pre-commit-config.yaml.lock
+.yamllint_cache
 
-TO-DO
+# ----------------------------------------
+# 🧮 Data & Notebooks
+# ----------------------------------------
+*.ipynb_checkpoints
+notebooks/.ipynb_checkpoints/
+data/
+*.csv
+*.tsv
+*.jsonl
+
+# ----------------------------------------
+# 🗂️ Deployment & CI
+# ----------------------------------------
+*.db
+*.sqlite3
+*.pid
+*.sock
+*.gz
+*.zip
+*.tar
+*.tgz
+*.bak
+*.old
+
+# ----------------------------------------
+# 🚀 Project Specific
+# ----------------------------------------
+# Logs, temp files, or local configs
+logs/
+tmp/
+.local/
+pulseboard.log
+
+# ----------------------------------------
+# 🧰 Optional Ignore (uncomment if used)
+# ----------------------------------------
+# .env.local
+# .env.production
+# secrets/
+# scripts/bootstrap.log

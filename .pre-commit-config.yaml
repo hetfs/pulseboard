@@ -1,77 +1,111 @@
+# -------------------------------------------------------------------
+# 🧩 Pre-Commit Configuration for PulseBoard (Python 3.14)
+# Runs Black, Ruff, MyPy, PyMarkdown, and EditorConfig checks.
+# -------------------------------------------------------------------
+# Docs: https://pre-commit.com
+# Install hooks:  pre-commit install
+# Run all checks: pre-commit run --all-files
+# -------------------------------------------------------------------
+
+default_language_version:
+  python: python3.14
+
 repos:
+  # --- EditorConfig Checker ---
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: v3.4.1
+    hooks:
+      - id: editorconfig-checker
+        name: Enforce .editorconfig rules
+        entry: editorconfig-checker
+        language: python
+        pass_filenames: true
+
+  # --- Core Pre-Commit Hooks ---
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-json
+      - id: check-yaml
+      - id: detect-private-key
+      - id: mixed-line-ending
+
+  # --- YAML Schema Validator ---
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.37.1
+    hooks:
+      - id: yamllint
+        name: Validate YAML schema
+        entry: yamllint
+        language: python
+        args: ["-c", ".yamllint.yaml", "."]
+
+  # --- Markdown Linter (PyMarkdown) ---
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: v0.9.33
+    hooks:
+      - id: pymarkdown
+        name: PyMarkdown — Lint Markdown files
+        entry: pymarkdown
+        args: ["scan", "."]
+        language: python
+        types: [markdown]
+
+  # --- Flowmark (Docs Style & Link Checker) ---
+  - repo: https://github.com/flowmark-lint/flowmark
+    rev: v0.5.7
+    hooks:
+      - id: flowmark
+        name: Flowmark — Validate Markdown content and links
+        entry: flowmark
+        language: python
+        types: [markdown]
+
+  # --- Ruff (Fast Linter & Import Sorter) ---
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.8
+    rev: v0.14.3
     hooks:
       - id: ruff
-        name: Run Ruff (lint) on Doc/
-        args: [--exit-non-zero-on-fix]
-        files: ^Doc/
-      - id: ruff
-        name: Run Ruff (lint) on Lib/test/
-        args: [--exit-non-zero-on-fix]
-        files: ^Lib/test/
-      - id: ruff
-        name: Run Ruff (lint) on Tools/i18n/
-        args: [--exit-non-zero-on-fix, --config=Tools/i18n/.ruff.toml]
-        files: ^Tools/i18n/
-      - id: ruff
-        name: Run Ruff (lint) on Argument Clinic
-        args: [--exit-non-zero-on-fix, --config=Tools/clinic/.ruff.toml]
-        files: ^Tools/clinic/|Lib/test/test_clinic.py
-      - id: ruff
-        name: Run Ruff (lint) on Tools/peg_generator/
-        args: [--exit-non-zero-on-fix, --config=Tools/peg_generator/.ruff.toml]
-        files: ^Tools/peg_generator/
-      - id: ruff-format
-        name: Run Ruff (format) on Doc/
-        args: [--check]
-        files: ^Doc/
+        name: Ruff — Lint & Fix Python code
+        args: [--fix, --exit-non-zero-on-fix]
 
-  - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 25.1.0
+  # --- isort (Import Sorter, for IDE compatibility) ---
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v7.0.0
+    hooks:
+      - id: isort
+        name: Sort imports
+        args: ["--profile", "black"]
+
+  # --- Black (Code Formatter) ---
+  - repo: https://github.com/psf/black
+    rev: 25.9.0
     hooks:
       - id: black
-        name: Run Black on Tools/jit/
-        files: ^Tools/jit/
+        name: Format Python code with Black
+        language_version: python3.14
 
-  - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.5
+  # --- MyPy (Static Type Checker) ---
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.18.2
     hooks:
-      - id: remove-tabs
-        types: [python]
-        exclude: ^Tools/c-analyzer/cpython/_parser.py
+      - id: mypy
+        name: Type check with MyPy
+        additional_dependencies: [types-requests, types-pyyaml]
+        args: ["--strict", "--ignore-missing-imports"]
 
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
+  # --- Flake8 (Optional for Legacy CI) ---
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.0
     hooks:
-      - id: check-case-conflict
-      - id: check-merge-conflict
-      - id: check-toml
-        exclude: ^Lib/test/test_tomllib/
-      - id: check-yaml
-      - id: end-of-file-fixer
-        types_or: [python, yaml]
-        exclude: Lib/test/tokenizedata/coding20731.py
-      - id: end-of-file-fixer
-        files: '^\.github/CODEOWNERS$'
-      - id: trailing-whitespace
-        types_or: [c, inc, python, rst, yaml]
-      - id: trailing-whitespace
-        files: '^\.github/CODEOWNERS|\.(gram)$'
+      - id: flake8
+        name: Flake8 — Legacy Python Linter
+        args: ["--max-line-length=120"]
 
-  - repo: https://github.com/woodruffw/zizmor-pre-commit
-    rev: v1.11.0
-    hooks:
-      - id: zizmor
-
-  - repo: https://github.com/sphinx-contrib/sphinx-lint
-    rev: v1.0.0
-    hooks:
-      - id: sphinx-lint
-        args: [--enable=default-role]
-        files: ^Doc/|^Misc/NEWS.d/
-
+  # --- Pre-Commit Meta Checks ---
   - repo: meta
     hooks:
-      - id: check-hooks-apply
       - id: check-useless-excludes
+      - id: check-hooks-apply

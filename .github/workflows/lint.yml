@@ -1,0 +1,115 @@
+# ===============================================================
+# 🧹 GitHub Actions Workflow: PulseBoard Code Quality Checks
+# https://github.com/hetfs/pulseboard
+#
+# Ensures consistent linting, formatting, and type checking
+# aligned with pyproject.toml developer toolchain (Python 3.14)
+
+# ========= 🧰 Recommended Project Commands =========
+# If you want to run the same quality checks locally before committing:
+# Install development dependencies
+# pip install -e ".[dev]"
+#
+# # Run all checks manually
+# pre-commit run --all-files
+# black --check .
+# isort --check-only .
+# ruff check .
+# mypy .
+# yamllint .
+# pymarkdownlint scan .
+# =======================================================
+
+name: 🧹 Code Quality Checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: 🧪 Lint • Format • Type Check
+    runs-on: ubuntu-latest
+
+    steps:
+      # ------------------------------
+      # 📦 Checkout Repository
+      # ------------------------------
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # ------------------------------
+      # 🐍 Set up Python 3.14
+      # ------------------------------
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+
+      # ------------------------------
+      # ⚙️ Install Build Tools & Dependencies
+      # ------------------------------
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]" setuptools wheel build twine
+
+      # ------------------------------
+      # 🧩 Temporary Patch for Black (3.14 Compatibility)
+      # ------------------------------
+      - name: Patch pyproject.toml for Black
+        run: |
+          sed -i 's/py314/py313/g' pyproject.toml
+
+      # ------------------------------
+      # 🧽 Run Pre-Commit Hooks
+      # ------------------------------
+      - name: Run Pre-commit Hooks
+        run: pre-commit run --all-files --show-diff-on-failure
+
+      # ------------------------------
+      # 🎨 Code Formatting — Black
+      # ------------------------------
+      - name: Check Code Format (Black)
+        run: black --check .
+
+      # ------------------------------
+      # 📐 Import Sorting — isort
+      # ------------------------------
+      - name: Check Import Order (isort)
+        run: isort --check-only .
+
+      # ------------------------------
+      # 🪶 Python Linting — Ruff
+      # ------------------------------
+      - name: Run Linter (Ruff)
+        run: ruff check .
+
+      # ------------------------------
+      # 🔍 Static Typing — MyPy
+      # ------------------------------
+      - name: Run Type Checker (MyPy)
+        run: mypy --strict .
+
+      # ------------------------------
+      # ✅ YAML & Markdown Linting
+      # ------------------------------
+      - name: Validate YAML and Markdown
+        run: |
+          yamllint .
+          pymarkdownlint scan .
+
+      # ------------------------------
+      # 🧹 Summary
+      # ------------------------------
+      - name: Display Python & Tool Versions
+        run: |
+          python --version
+          black --version
+          ruff --version
+          mypy --version
+          pre-commit --version

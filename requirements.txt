@@ -1,0 +1,50 @@
+# ======================================================
+# PulseBoard Project: requirements.txt
+# Repository: https://github.com/hetfs/pulseboard
+# Target: Python 3.14 (Modern Packaging / PEP 621)
+# ======================================================
+
+# --------------------------------------
+# 🏗️ Build System
+# --------------------------------------
+setuptools>=80.9.0
+wheel>=0.45.1
+build>=1.3.0
+twine>=6.2.0
+
+# --------------------------------------
+# 🧩 Core Dependencies
+# --------------------------------------
+bokeh>=3.8.0
+fastapi[standard]>=0.121.0
+gunicorn>=23.0.0
+httptools>=0.7.1
+jinja2>=3.1.6
+numpy>=2.3.4
+pandas>=2.3.3
+psutil>=7.1.3
+python-dotenv>=1.0.1
+requests>=2.32.5
+uvicorn[standard]>=0.38.0
+uvloop>=0.22.1
+websockets>=15.0.1
+
+# --------------------------------------
+# 🧪 Development & Testing
+# --------------------------------------
+editorconfig-checker>=3.4.1
+flowmark>=0.5.7
+mypy>=1.18.2
+pre-commit>=4.3.0
+pytest>=8.4.2
+pytest-asyncio>=1.2.0
+ruff>=0.14.3
+yamllint>=1.37.1
+
+# --------------------------------------
+# 📝 Optional Markdown Tools
+# (Uncomment if needed for docs or testing)
+# --------------------------------------
+# markdown>=3.10
+# markdown2>=2.5.4
+# markitdown[all]>=0.1.3
