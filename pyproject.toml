@@ -13,7 +13,32 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
+# --------------------------------------
+# 🧩 Project Metadata
+# --------------------------------------
+
 [project]
+name = "pulseboard"
+version = "0.1.0"
+description = "PulseBoard — a modern, real-time dashboard built with FastAPI and Bokeh."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.14"
+
+authors = [{ name = "HETFS LTD", email = "hetfs01@gmail.com" }]
+maintainers = [{ name = "HETFS LTD", email = "hetfs01@gmail.com" }]
+
+keywords = ["fastapi", "dashboard", "bokeh", "realtime", "pulseboard"]
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Web Environment",
+  "Framework :: FastAPI",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
 
 dependencies = [
   "bokeh>=3.8.0",
@@ -31,25 +56,6 @@ dependencies = [
   "websockets>=15.0.1",
 ]
 
-name = "pulseboard"
-version = "0.1.0"
-description = "PulseBoard a modern, real-time dashboard built with FastAPI and Bokeh."
-readme = "README.md"
-license = { text = "MIT" }
-requires-python = ">=3.14"
-authors = [{ name = "HETFS LTD", email = "hetfs01@gmail.com" }]
-maintainers = [{ name = "HETFS LTD", email = "hetfs01@gmail.com" }]
-keywords = ["fastapi", "dashboard", "bokeh", "realtime", "pulseboard"]
-classifiers = [
-  "Development Status :: 4 Beta",
-  "Environment :: Web Environment",
-  "Framework :: FastAPI",
-  "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3.14",
-  "Topic :: Software Development :: Libraries :: Application Frameworks",
-]
-
 [project.optional-dependencies]
 dev = [
   "editorconfig-checker>=3.4.1",
@@ -58,17 +64,18 @@ dev = [
   "pre-commit>=4.3.0",
   "pytest>=8.4.2",
   "pytest-asyncio>=1.2.0",
+  "pytest-cov>=7.0.0",
   "pyright>=1.1.407",
   "ruff>=0.14.3",
   "yamllint>=1.37.1",
 ]
 
-# --------------------------------------
-# 📝 Optional Markdown Tools
-# (Uncomment if needed for docs or testing)
-# --------------------------------------
-
-#markdown = ["markdown>=3.10", "markdown2>=2.5.4", "markitdown[all]>=0.1.3"]
+# Optional Markdown tools (uncomment as needed)
+markdown = [
+  "markdown>=3.10",
+  # "markdown2>=2.5.4",
+  # "markitdown[all]>=0.1.3"
+]
 
 [project.urls]
 Homepage = "https://github.com/hetfs/pulseboard"
@@ -87,6 +94,10 @@ package-dir = { "" = "src" }
 where = ["src"]
 include = ["pulseboard*"]
 
+# --------------------------------------
+# 🧮 Type Checking & Linting
+# --------------------------------------
+
 [tool.mypy]
 python_version = "3.14"
 strict = true
@@ -101,10 +112,31 @@ line-length = 88
 select = ["E", "F", "W", "I", "B", "UP"]
 ignore = ["E501"]
 
+# --------------------------------------
+# 🧪 Testing & Coverage
+# --------------------------------------
+
 [tool.pytest.ini_options]
 minversion = "8.0"
 addopts = "-ra -q"
 testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+omit = ["tests/*", "src/experimental/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = ["pragma: no cover", "if __name__ == .__main__.:"]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+# --------------------------------------
+# 🪛 Developer Tools
+# --------------------------------------
 
 [tool.pre-commit]
 default_stages = ["commit"]
@@ -117,8 +149,43 @@ exclude = [".git", "__pycache__"]
 extends = "default"
 
 # --------------------------------------
-# 🧪 Build Metadata
+# 🧱 Build Metadata
 # --------------------------------------
+
 [tool.build]
 requires = ["build>=1.3.0"]
 backend = "setuptools.build_meta"
+
+# --------------------------------------
+# 🧠 Pyright Type Checker
+# Reference: https://github.com/microsoft/pyright
+# --------------------------------------
+
+[tool.pyright]
+include = ["src"]
+exclude = [
+  "**/node_modules",
+  "**/__pycache__",
+  "src/experimental",
+  "src/typestubs",
+]
+ignore = ["src/oldstuff"]
+
+defineConstant = { DEBUG = true }
+stubPath = "src/stubs"
+
+reportMissingImports = "error"
+reportMissingTypeStubs = false
+
+pythonVersion = "3.14"
+pythonPlatform = "Linux"
+
+executionEnvironments = [
+  { root = "src/pulseboard", extraPaths = [
+    "src",
+  ], reportMissingImports = "warning" },
+  { root = "src/tests", extraPaths = [
+    "src/pulseboard",
+  ], reportMissingImports = "information" },
+  { root = "src" },
+]

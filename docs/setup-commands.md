@@ -1,24 +1,62 @@
-# ⚡ PulseBoard setup duide
+# ⚡ PulseBoard Setup Guide
 
-This section outlines how to **run**, **test**, and **package** the PulseBoard project using modern Python tools.
+This section outlines how to **run**, **test**, **package**, and **set up the environment** for the PulseBoard project using modern Python tools.
 
 ---
 
-## 🧩 Local development
+## 🐍 Environment Setup
 
-Start the FastAPI application with **automatic reload** for live code updates:
+Create a virtual environment using **Python 3.14**:
+
+```bash
+python3.14 -m venv .venv
+```
+
+Activate the virtual environment:
+
+```bash
+# Linux/macOS
+source .venv/bin/activate
+
+# Windows (PowerShell)
+.venv\Scripts\Activate.ps1
+```
+
+Upgrade `pip` and core build tools:
+
+```bash
+pip install --upgrade pip setuptools wheel
+```
+
+Install production dependencies:
+
+```bash
+pip install .
+```
+
+Install development dependencies (for testing, linting, type-checking):
+
+```bash
+pip install -e .[dev]
+```
+
+---
+
+## 🧩 Local Development
+
+Start the FastAPI application with **automatic reload**:
 
 ```bash
 uvicorn pulseboard.main:app --reload
 ```
 
-This will launch the app locally at [http://127.0.0.1:8000](http://127.0.0.1:8000).
+Access the app at [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
 ---
 
-## 🚀 Production deployment
+## 🚀 Production Deployment
 
-Run the app in **production mode** using **Gunicorn** with Uvicorn workers for high performance:
+Run the app in **production mode** using **Gunicorn** with Uvicorn workers:
 
 ```bash
 gunicorn pulseboard.main:app \
@@ -32,7 +70,7 @@ gunicorn pulseboard.main:app \
 
 ### 🧠 Standard Test Run
 
-Run all asynchronous tests with verbose output:
+Run all asynchronous tests with detailed output:
 
 ```bash
 pytest -v --asyncio-mode=auto
@@ -40,17 +78,27 @@ pytest -v --asyncio-mode=auto
 
 ### 🤖 CI-Friendly Mode
 
-Run tests quietly for continuous integration environments:
+Run tests quietly for continuous integration pipelines:
 
 ```bash
 pytest -q --disable-warnings
 ```
 
+### 📊 Coverage Reporting
+
+Generate a coverage report (terminal + HTML):
+
+```bash
+pytest --cov=src/pulseboard --cov-report=term-missing --cov-report=html
+```
+
+The HTML report will be available under `htmlcov/`.
+
 ---
 
-## 🧰 Working with virtual environments and modern tools
+## 🧰 Working with Virtual Environments and Modern Tools
 
-Install the project and its dependencies directly from `pyproject.toml`:
+Install the project and dependencies directly from `pyproject.toml`:
 
 ```bash
 pip install .
@@ -62,13 +110,13 @@ Or install in **editable mode** for active development:
 pip install -e .
 ```
 
-Both commands use the configuration from your **pyproject.toml** for dependency management and build metadata.
+Both commands automatically read your **pyproject.toml** for dependency and build configuration.
 
 ---
 
-## ⚙️ Typical development workflow
+## ⚙️ Typical Development Workflow
 
-1. **Initialize or update** your `pyproject.toml` file
+1. **Initialize or update** your `pyproject.toml`.
 
 2. **Build the package** for distribution:
 
@@ -86,4 +134,10 @@ Both commands use the configuration from your **pyproject.toml** for dependency 
 
    ```bash
    uvicorn pulseboard.main:app --reload
+   ```
+
+5. **Run tests** and check coverage:
+
+   ```bash
+   pytest --cov=src/pulseboard --cov-report=html
    ```

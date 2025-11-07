@@ -2,11 +2,13 @@
 set -euo pipefail
 
 # ------------------------------------------------------
-# 🚀 Pulseboard Bootstrap Script
+# 🚀 PulseBoard Bootstrap Script
 # ------------------------------------------------------
-# Runs from any directory (e.g. ./scripts/bootstrap.sh)
-# Automatically installs Python 3.14, sets up venv in root,
-# and installs dependencies from the project root.
+# Runs from any directory (e.g., ./scripts/bootstrap.sh)
+# Automatically installs Python 3.14 if missing,
+# sets up virtual environment in project root,
+# installs dependencies and optional dev tools,
+# ready for development or CI pipelines.
 # ------------------------------------------------------
 
 PYTHON_BIN="python3.14"
@@ -15,7 +17,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 echo ""
-echo "🧩 Starting Pulseboard environment setup..."
+echo "🧩 Starting PulseBoard environment setup..."
 echo "--------------------------------------------"
 echo "📁 Script directory: ${SCRIPT_DIR}"
 echo "📂 Project root: ${PROJECT_ROOT}"
@@ -80,13 +82,21 @@ fi
 # shellcheck disable=SC1091
 source "${VENV_DIR}/bin/activate"
 
+echo "🐍 Using Python: $(python --version)"
+echo "📁 Virtual env: $(which python)"
+
 # ------------------------------------------------------
-# 🧱 Install Dependencies
+# 🧱 Upgrade pip and essential build tools
 # ------------------------------------------------------
 echo ""
-echo "📦 Installing dependencies from project root..."
-pip install --upgrade pip wheel
+echo "⬆️ Upgrading pip, setuptools, and wheel..."
+pip install --upgrade pip setuptools wheel build twine
 
+# ------------------------------------------------------
+# 📦 Install dependencies
+# ------------------------------------------------------
+echo ""
+echo "📦 Installing production dependencies..."
 if [[ -f "${PROJECT_ROOT}/requirements.txt" ]]; then
         pip install -r "${PROJECT_ROOT}/requirements.txt"
 elif [[ -f "${PROJECT_ROOT}/pyproject.toml" ]]; then
@@ -96,10 +106,33 @@ else
 fi
 
 # ------------------------------------------------------
+# 🧰 Install optional development dependencies
+# ------------------------------------------------------
+if [[ -f "${PROJECT_ROOT}/pyproject.toml" ]]; then
+        echo "🧪 Installing development dependencies..."
+        pip install -e .[dev] || echo "⚠️ Dev dependencies installation failed or already satisfied."
+fi
+
+# ------------------------------------------------------
+# 🧾 Load environment variables (if .env exists)
+# ------------------------------------------------------
+if [[ -f "${PROJECT_ROOT}/.env" ]]; then
+        echo "📝 Loading environment variables from .env..."
+        export $(grep -v '^#' .env | xargs)
+fi
+
+# ------------------------------------------------------
+# 🔍 Verify core packages
+# ------------------------------------------------------
+echo ""
+echo "🔍 Verifying critical packages..."
+python -c "import bokeh, pandas, numpy, fastapi, uvicorn; print('✅ All core packages loaded successfully.')"
+
+# ------------------------------------------------------
 # ✅ Summary
 # ------------------------------------------------------
 echo ""
-echo "🎉 Setup complete!"
+echo "🎉 PulseBoard setup complete!"
 echo ""
 echo "👉 To activate the environment later:"
 echo "   source ${PROJECT_ROOT}/${VENV_DIR}/bin/activate"
@@ -110,5 +143,7 @@ echo ""
 echo "👉 Run tests:"
 echo "   pytest -v --asyncio-mode=auto"
 echo ""
-
+echo "👉 Generate coverage report:"
+echo "   pytest --cov=src/pulseboard --cov-report=html"
+echo ""
 exit 0
