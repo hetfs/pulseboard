@@ -9,13 +9,13 @@ __pycache__/
 *.egg
 *.egg-info/
 .eggs/
-.env
 .venv/
 venv/
 ENV/
 env/
 pip-wheel-metadata/
 pip-log.txt
+.env
 
 # ----------------------------------------
 # 🧰 Build & Packaging
@@ -89,7 +89,6 @@ data/
 # ----------------------------------------
 # 🚀 Project Specific
 # ----------------------------------------
-# Logs, temp files, or local configs
 logs/
 tmp/
 .local/
