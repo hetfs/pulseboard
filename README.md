@@ -2,7 +2,10 @@
   <img src="assets/pulseboard.png" alt="Git HubCraft Banner" width="800">
 </p>
 
+---
+
 <h1 align="center">⚡ Pulseboard</h1>
+
 <p>
 **Pulseboard** is a **real-time distributed system monitoring dashboard** built with **Bokeh**, **FastAPI**, and **WebSockets**.
 It visualizes live system metrics—CPU, memory, network, and disk—across multiple machines.
