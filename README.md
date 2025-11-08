@@ -7,9 +7,11 @@
 <h1 align="center">⚡ Pulseboard</h1>
 
 <p>
+
 **Pulseboard** is a **real-time distributed system monitoring dashboard** built with **Bokeh**, **FastAPI**, and **WebSockets**.
 It visualizes live system metrics—CPU, memory, network, and disk—across multiple machines.
 Designed for developers, DevOps engineers, and data teams, it provides instant insights into system performance.
+
 </p>
 
 ---
@@ -65,17 +67,26 @@ cd pulseboard
 
 The setup script creates a virtual environment, installs dependencies, and launches the dashboard.
 
+#### 🐧 Linux/macOS
+
 ```bash
-chmod +x setup.sh
-./setup.sh
+cd scripts
+sh bootstrap.sh
 ```
 
-It automatically performs:
+#### 🪟 Windows
+
+```powershell
+cd scripts
+.\bootstrap.ps1
+```
+
+Both scripts automatically perform:
 
 * Python 3.14 environment validation
 * Virtual environment creation (`.venv/`)
 * Dependency installation from `requirements.txt`
-* Starts the dashboard at [http://localhost:5006](http://localhost:5006)
+* Launches the dashboard at [http://localhost:5006](http://localhost:5006)
 
 ---
 
@@ -153,6 +164,6 @@ Before submitting:
 
 ---
 
-## 📜 License
+## 📄 License
 
-**MIT License** © 2025 — *hetfs / Pulseboard*
+Licensed under the **MIT License**. See [LICENSE](./LICENSE).
